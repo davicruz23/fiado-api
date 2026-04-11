@@ -29,6 +29,7 @@ public class TokenService {
                     .withSubject(user.getCpf())
                     .withClaim("id", user.getId())
                     .withClaim("nome", user.getName())
+                    .withClaim("role", "ROLE_"+user.getPosition().name())
                     .withExpiresAt(genAccessExpiration())
                     .sign(algorithm);
         } catch (JWTCreationException ex) {
