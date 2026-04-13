@@ -1,5 +1,6 @@
 package com.flowtech.fiadoapi.service;
 
+import com.flowtech.fiadoapi.enums.UserType;
 import com.flowtech.fiadoapi.exception.BusinessException;
 import com.flowtech.fiadoapi.model.User;
 import com.flowtech.fiadoapi.model.dto.user.UpsertUserDTO;
@@ -40,6 +41,7 @@ public class AuthService {
         user.setCpf(store.getCpf());
         user.setPassword(passwordEncoder.encode(store.getPassword()));
         user.setActive(true);
+        user.setPosition(UserType.fromValue(store.getPosition()));
         user = userRepository.save(user);
 
         return user;

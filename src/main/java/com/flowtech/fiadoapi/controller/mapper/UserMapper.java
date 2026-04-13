@@ -10,6 +10,7 @@ public class UserMapper {
                 .name(src.getName())
                 .cpf(src.getCpf())
                 .active(src.isActive())
+                .position(src.getPosition().name())
                 .build();
     }
 }

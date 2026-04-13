@@ -13,5 +13,6 @@ public class UpsertUserDTO {
     private String cpf;
     private String password;
     private boolean active;
+    private Integer position;
 
 }

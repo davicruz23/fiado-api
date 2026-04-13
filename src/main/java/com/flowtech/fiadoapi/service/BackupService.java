@@ -25,21 +25,27 @@ public class BackupService {
             dir.mkdirs();
         }
 
+        String safeEmpresa = empresaNome != null ? sanitize(empresaNome) : "sem_nome";
+        String prefix = "backup_" + safeEmpresa + "_" + userId;
+        File[] existingFiles = dir.listFiles((d, name) -> name.startsWith(prefix));
+
+        if (existingFiles != null) {
+            for (File oldFile : existingFiles) {
+                System.out.println("DELETANDO ANTIGO: " + oldFile.getName());
+                oldFile.delete();
+            }
+        }
+
         String timestamp = LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
 
-        String safeEmpresa = empresaNome != null ? sanitize(empresaNome) : "sem_nome";
-
-        String fileName = "backup_" +
-                safeEmpresa + "_" +
-                userId + "_" +
-                timestamp + ".db";
+        String fileName = prefix + "_" + timestamp + ".db";
 
         Path target = Paths.get(backupDir, fileName);
 
-        System.out.println("SALVANDO EM: " + target);
+        System.out.println("SALVANDO NOVO BACKUP: " + target);
 
-        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(file.getInputStream(), target);
 
         return fileName;
     }
