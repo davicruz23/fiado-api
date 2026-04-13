@@ -40,15 +40,24 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 if (user != null) {
 
+                    if (!user.isActive()) {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.setContentType("application/json");
+                        response.setCharacterEncoding("UTF-8");
+
+                        response.getWriter().write("{\"message\":\"Usuario inativo\"}");
+                        return;
+                    }
+
                     String role = tokenService.extractRole(token);
 
-                    var authorities = List.of(new SimpleGrantedAuthority(role)); // IMPORTANTE
+                    var authorities = List.of(new SimpleGrantedAuthority(role));
 
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(
                                     user,
                                     null,
-                                    authorities // usando as roles do token agora
+                                    authorities
                             );
 
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
